@@ -14,15 +14,34 @@ def insertion_sort(arr):
         arr[j + 1] = item_to_insert
 
 
+# Модифицированный двоичный поиск. Подфункция, которая будет использоваться
+# в основной функции поиска
+def modified_binary_search(arr, element, left, right):
+    middle = (right + left) // 2  # находимо середину
+    if arr[middle] < element and arr[middle + 1] >= element:  # если элемент в середине,
+        return middle  # возвращаем этот индекс
+    elif element <= arr[middle]:  # если элемент меньше или равен элементу в середине
+        # рекурсивно ищем в левой половине
+        return modified_binary_search(arr, element, left, middle - 1)
+    else:  # иначе в правой
+        return modified_binary_search(arr, element, middle + 1, right)
+
+
 # Определение позиции элемента списка arr, который меньше заданного числа num,
 # а следующий за ним больше или равен этому числу
 # Если первый элемент списка arr[0] тоже >= num, то возвращаем -1
 def position_to_insert(arr, num):
-    # Начинаем с конца и идем влево
+    # Проверяем первый и последний элементы. Если первый >= num, возвращаем -1.
+    # Если последний < num, возвращаем его индекс.
+    # Если оба этих условия не выполняются, т.е. arr[0]<num and arr[len]>=num,
+    # то искать нужно где-то между ними
     j = len(arr) - 1
-    while j >= 0 and arr[j] >= num:
-        j -= 1
-    return j
+    if arr[0] >= num:
+        return -1
+    elif arr[j] < num:
+        return j
+    else:
+        return modified_binary_search(arr, num, 0, j)
 
 
 # Вводим список для сортировки
